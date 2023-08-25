@@ -1,0 +1,81 @@
+fonction de supprestion : 
+
+    public static boolean deleteRecord(String jdbcUrl, String user, String password, int id) {
+        try {
+            Connection connection = DriverManager.getConnection(jdbcUrl, user, password);
+            String sql = "DELETE FROM ma_table WHERE id = " + id;
+            Statement statement = connection.createStatement();
+            int rowsAffected = statement.executeUpdate(sql);
+            statement.close();
+            connection.close();
+
+            return rowsAffected > 0; // Retourne vrai si au moins une ligne a été supprimée
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // En cas d'erreur, retourne faux
+        }
+exmple get :
+class person
+public class Person {
+    private int id;
+    private String firstName;
+    private String lastName;
+
+    // Constructeurs, getters et setters
+}
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+fonction de get persone
+
+public class SelectExample {
+    public static void main(String[] args) {
+        String jdbcUrl = "jdbc:mysql://localhost:3306/ma_base_de_donnees";
+        String user = "nom_utilisateur";
+        String password = "mot_de_passe";
+
+        int idToFind = 1;
+
+        Person person = getPersonById(jdbcUrl, user, password, idToFind);
+        if (person != null) {
+            System.out.println("Personne trouvée : " + person.getFirstName() + " " + person.getLastName());
+        } else {
+            System.out.println("Personne non trouvée.");
+        }
+    }
+
+    public static Person getPersonById(String jdbcUrl, String user, String password, int id) {
+        try {
+            Connection connection = DriverManager.getConnection(jdbcUrl, user, password);
+            String sql = "SELECT * FROM ma_table WHERE id = ?";
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                Person person = new Person();
+                person.setId(resultSet.getInt("id"));
+                person.setFirstName(resultSet.getString("first_name"));
+                person.setLastName(resultSet.getString("last_name"));
+                
+                resultSet.close();
+                preparedStatement.close();
+                connection.close();
+
+                return person;
+            } else {
+                resultSet.close();
+                preparedStatement.close();
+                connection.close();
+
+                return null;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null; // En cas d'erreur, retourne null
+        }
+    }
+}
